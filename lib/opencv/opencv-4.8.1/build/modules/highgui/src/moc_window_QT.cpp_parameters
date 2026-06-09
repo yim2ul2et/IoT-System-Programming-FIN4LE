@@ -1,0 +1,13 @@
+-I/home/pi/opencv/opencv-4.8.1/build
+-I/home/pi/opencv/opencv-4.8.1/build
+-I/home/pi/opencv/opencv-4.8.1/modules/highgui
+-I/home/pi/opencv/opencv-4.8.1/build/modules/highgui
+-D_USE_MATH_DEFINES
+-D__STDC_CONSTANT_MACROS
+-D__STDC_LIMIT_MACROS
+-D__STDC_FORMAT_MACROS
+-DHAVE_WEBP
+-DHAVE_QT
+-o
+/home/pi/opencv/opencv-4.8.1/build/modules/highgui/src/moc_window_QT.cpp
+/home/pi/opencv/opencv-4.8.1/modules/highgui/src/window_QT.h
