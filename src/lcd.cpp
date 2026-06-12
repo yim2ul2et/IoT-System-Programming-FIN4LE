@@ -1,7 +1,4 @@
-#include <iostream>
-#include <lcd.h>
-#include <wiringPi.h>
-#include "../include/lcd.hpp"
+#include "include/lcd.hpp"
 
 using namespace std;
 
@@ -21,10 +18,19 @@ void lcd::lcdClear() {
   cout << "LCD is cleared" << endl;
 }
 
-void lcd::lcdOutput(const string &str) {
+void lcd::lcdOutput(const wstring &str) {
   lcdPosition(lcdState, 0, 0);
-  lcdPuts(lcdState, str.c_str());
-  cout << "LCD output: " << str << endl;
+  auto en = changeKorToEng(str);
+  lcdPuts(lcdState, en.c_str());
+  cout << "LCD output: " << en << endl;
+}
+
+string lcd::changeKorToEng(const wstring &str) {
+  string result;
+  for (auto &ch : str) {
+    if (KorToEng.find(ch) != KorToEng.end()) result += ch;
+  }
+  return result;
 }
 
 /* TODO
