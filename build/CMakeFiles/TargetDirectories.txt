@@ -1,3 +1,0 @@
-/home/pi/IoT-System-Programming-FIN4LE/build/CMakeFiles/my_program.dir
-/home/pi/IoT-System-Programming-FIN4LE/build/CMakeFiles/edit_cache.dir
-/home/pi/IoT-System-Programming-FIN4LE/build/CMakeFiles/rebuild_cache.dir
