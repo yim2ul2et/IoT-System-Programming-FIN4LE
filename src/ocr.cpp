@@ -1,14 +1,21 @@
 #include "../include/ocr.hpp"
 
+bool Ocr::modelInit(const std::string& onnx_file) {
+  net = cv::dnn::readNetFromONNX(onnx_file);
+  if (net.empty()) {
+    std::cerr << "모델 파일을 찾을 수 없습니다." << std::endl;
+  }
+  return !net.empty();
+}
+
 cv::Mat Ocr::cutting(const cv::Mat& src) {
   if (src.empty()) {
     std::cerr << "이미지를 불러올 수 없습니다." << std::endl;
     return src;
   }
 
-  cv::dnn::Net net = cv::dnn::readNetFromONNX("best.onnx");
   if (net.empty()) {
-    std::cerr << "모델 파일을 찾을 수 없습니다." << std::endl;
+    std::cerr << "모델이 선택되지 않았습니다." << std::endl;
     return src;
   }
 
