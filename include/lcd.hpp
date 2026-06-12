@@ -1,17 +1,19 @@
 #pragma once
 
-#include <iostream>
 #include <lcd.h>
 #include <wiringPi.h>
+
+#include <iostream>
 #include <map>
 #include <string>
 
 class Lcd {
-private:
+ private:
   int lcdState;
-public:
+
+ public:
   Lcd();
   ~Lcd();
-  void print(const std::string &str);
+  void print(const std::string& str);
   void clear();
 };

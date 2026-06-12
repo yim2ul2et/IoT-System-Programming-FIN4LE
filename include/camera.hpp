@@ -1,11 +1,12 @@
 #pragma once
-#include <opencv2/opencv.hpp>
 #include <iostream>
+#include <opencv2/opencv.hpp>
 
 class Camera {
-private:
+ private:
   cv::VideoCapture cam;
-public:
+
+ public:
   bool openCamera(int index);
   cv::Mat capture();
 };

@@ -9,8 +9,8 @@
 
 Lcd::Lcd() {
   std::cout << "LCD is created" << std::endl;
-  lcdState = lcdInit(2, 16, 4, LCD_RS, LCD_E, LCD_D4, 
-    LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0);
+  lcdState = lcdInit(2, 16, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0,
+                     0, 0, 0);
   if (lcdState) std::cerr << "LCD init is failed" << std::endl;
 
   lcdPosition(lcdState, 0, 0);
