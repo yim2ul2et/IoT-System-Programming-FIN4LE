@@ -9,7 +9,6 @@ void Gate::setRGB(bool red, bool green, bool blue) {
   digitalWrite(RED_PIN, red);
   digitalWrite(GREEN_PIN, green);
   digitalWrite(BLUE_PIN, blue);
-  std::cout << "Gate is created" << std::endl;
 }
 
 Gate::Gate() {
@@ -18,11 +17,13 @@ Gate::Gate() {
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(BLUE_PIN, OUTPUT);
   close();
-  std::cout << "Gate is destroyed" << std::endl;
+  std::cout << "Gate is created" << std::endl;
+  
 }
 
 Gate::~Gate() {
   setRGB(0, 0, 0);
+  std::cout << "Gate is destroyed" << std::endl;
 }
 
 bool Gate::open() {

@@ -13,5 +13,7 @@ cv::Mat Camera::capture() {
 
   cv::Mat frame;
   cam >> frame;
+  cv::imwrite("../assets/images/cam.jpg", frame);
+  std::cout << "카메라 사진 촬영 완료" << std::endl;
   return frame;
 }

@@ -1,4 +1,4 @@
-#include "include/lcd.hpp"
+#include "../include/lcd.hpp"
 
 #define LCD_RS 11
 #define LCD_E 10

@@ -1,10 +1,66 @@
 #include "../include/ocr.hpp"
 
+Ocr::Ocr() {
+  mapping.emplace("가", "AA");
+  mapping.emplace("나", "AB");
+  mapping.emplace("다", "AC");
+  mapping.emplace("라", "AD");
+  mapping.emplace("마", "AE");
+
+  mapping.emplace("거", "BA");
+  mapping.emplace("너", "BB");
+  mapping.emplace("더", "BC");
+  mapping.emplace("러", "BD");
+  mapping.emplace("머", "BE");
+  mapping.emplace("버", "BF");
+  mapping.emplace("서", "BG");
+  mapping.emplace("어", "BH");
+  mapping.emplace("저", "BI");
+
+  mapping.emplace("고", "CA");
+  mapping.emplace("노", "CB");
+  mapping.emplace("도", "CC");
+  mapping.emplace("로", "CD");
+  mapping.emplace("모", "CE");
+  mapping.emplace("보", "CF");
+  mapping.emplace("소", "CG");
+  mapping.emplace("오", "CH");
+  mapping.emplace("조", "CI");
+
+  mapping.emplace("구", "DA");
+  mapping.emplace("누", "DB");
+  mapping.emplace("두", "DC");
+  mapping.emplace("루", "DD");
+  mapping.emplace("무", "DE");
+  mapping.emplace("부", "DF");
+  mapping.emplace("수", "DG");
+  mapping.emplace("우", "DH");
+  mapping.emplace("주", "DI");
+
+  mapping.emplace("아", "EA");
+  mapping.emplace("바", "EB");
+  mapping.emplace("사", "EC");
+  mapping.emplace("자", "ED");
+
+  mapping.emplace("배", "FA");
+
+  mapping.emplace("하", "GA");
+  mapping.emplace("허", "GB");
+  mapping.emplace("호", "GC");
+
+  mapping.emplace("국", "ZA");
+  mapping.emplace("합", "ZB");
+  mapping.emplace("육", "ZC");
+  mapping.emplace("해", "ZD");
+  mapping.emplace("공", "ZE");
+}
+
 bool Ocr::modelInit(const std::string& onnx_file) {
   net = cv::dnn::readNetFromONNX(onnx_file);
   if (net.empty()) {
     std::cerr << "모델 파일을 찾을 수 없습니다." << std::endl;
   }
+  std::cout << "모델 세팅 완료: " << onnx_file << std::endl;
   return !net.empty();
 }
 
@@ -92,7 +148,7 @@ cv::Mat Ocr::cutting(const cv::Mat& src) {
     box = box & cv::Rect(0, 0, copy.cols, copy.rows);
     if (!box.empty()) {
       cropped = src(box);
-      bool success = imwrite("./images/cutted.jpg", cropped);
+      bool success = imwrite("../assets/images/cutted.jpg", cropped);
       if (success) std::cout << "번호판 저장 성공" << std::endl;
     }
   }
@@ -109,21 +165,21 @@ cv::Mat Ocr::preprocessing(const cv::Mat& src) {
 
   cv::resize(src, resized, cv::Size(), 4.0, 4.0,
              cv::INTER_CUBIC);  // 사이즈 변환
-  cv::imwrite("./images/resized.jpg", resized);
+  cv::imwrite("../assets/images/resized.jpg", resized);
 
   cv::cvtColor(resized, gray, cv::COLOR_BGR2GRAY);  // 흑백 변환
-  cv::imwrite("./images/gray.jpg", gray);
+  cv::imwrite("../assets/images/gray.jpg", gray);
 
   cv::GaussianBlur(gray, blurred, cv::Size(3, 3), 0);  // 가우시안 블러
-  cv::imwrite("./images/blurred.jpg", blurred);
+  cv::imwrite("../assets/images/blurred.jpg", blurred);
 
   cv::adaptiveThreshold(blurred, binary, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C,
-                        cv::THRESH_BINARY, 155, 5);  // 이진화
-  cv::imwrite("./images/binary.jpg", binary);
+                        cv::THRESH_BINARY, 99, 5);  // 이진화
+  cv::imwrite("../assets/images/binary.jpg", binary);
 
   cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
   cv::morphologyEx(binary, result, cv::MORPH_OPEN, kernel);  // 외곽선 정리
-  cv::imwrite("./images/result.jpg", result);
+  cv::imwrite("../assets/images/result.jpg", result);
 
   std::cout << "전처리 완료" << std::endl;
   return result;
@@ -150,5 +206,38 @@ std::string Ocr::changeText(const cv::Mat& src) {
 
   ocrEngine->End();
   delete ocrEngine;
+  return result;
+}
+
+std::string Ocr::parsing(const std::string &str) {
+  int idx = 1e9;
+  std::string kor_to_rng;
+  for (int i = 0; i < (int)(str.size()); i++) {
+    if ((unsigned char)str[i] >= 0xEA && (unsigned char)str[i] <= 0xED) {
+      if (i + 2 < str.length()) {
+        unsigned char b2 = (unsigned char)str[i + 1];
+        unsigned char b3 = (unsigned char)str[i + 2];
+
+        // '가'(0xEA 0x80 0x80) ~ '힣'(0xED 0x9E 0xBF) 범위 체크
+        if (b2 >= 0x80 && b2 <= 0xBF && b3 >= 0x80 && b3 <= 0xBF) {
+          idx = i, kor_to_rng = mapping[str.substr(i, 3)];
+          break;
+        }
+      }
+    }
+  }
+
+  if (idx == 1e9) return std::string();
+
+  std::string result;
+  for (int i = idx - 1, cnt = 0; i >= 0; i--) {
+    if (isdigit(str[i]) && cnt < 3) result.push_back(str[i]), cnt++;
+  }
+  reverse(result.begin(), result.end());
+  result += kor_to_rng;
+  for (int i = idx + 3, cnt = 0; i < (int)(str.size()); i++) {
+    if (isdigit(str[i]) && cnt < 4) result.push_back(str[i]), cnt++;
+  }
+
   return result;
 }
