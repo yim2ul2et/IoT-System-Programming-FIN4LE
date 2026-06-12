@@ -1,16 +1,17 @@
 #pragma once
+
 #include <iostream>
 #include <lcd.h>
 #include <wiringPi.h>
 #include <map>
 #include <string>
 
-class lcd {
+class Lcd {
 private:
-  std::map <char, char> KorToEng;
-  int lcdPin, lcdState;
+  int lcdState;
 public:
-  std::string changeKorToEng(const std::wstring &str);
-  void lcdOutput(const std::wstring &str);
-  void lcdClear();
+  Lcd();
+  ~Lcd();
+  void print(const std::string &str);
+  void clear();
 };

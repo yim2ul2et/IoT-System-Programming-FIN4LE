@@ -1,38 +1,33 @@
 #include "include/lcd.hpp"
 
-using namespace std;
+#define LCD_RS 11
+#define LCD_E 10
+#define LCD_D4 6
+#define LCD_D5 5
+#define LCD_D6 4
+#define LCD_D7 1
 
-lcd::lcd() {
-  cout << "LCD is created" << endl;
-  lcdState = lcdInit(2, 16, 4, 11, 10, 6, 5, 4, 1, 0, 0, 0, 0);
-  if (lcdState) cout << "LCD init is failed" << endl;
-}
+Lcd::Lcd() {
+  std::cout << "LCD is created" << std::endl;
+  lcdState = lcdInit(2, 16, 4, LCD_RS, LCD_E, LCD_D4, 
+    LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0);
+  if (lcdState) std::cerr << "LCD init is failed" << std::endl;
 
-lcd::~lcd() {
-  lcdClear();
-  cout << "LCD is destroyed" << endl;
-}
-
-void lcd::lcdClear() {
-  lcdClear();
-  cout << "LCD is cleared" << endl;
-}
-
-void lcd::lcdOutput(const wstring &str) {
   lcdPosition(lcdState, 0, 0);
-  auto en = changeKorToEng(str);
-  lcdPuts(lcdState, en.c_str());
-  cout << "LCD output: " << en << endl;
 }
 
-string lcd::changeKorToEng(const wstring &str) {
-  string result;
-  for (auto &ch : str) {
-    if (KorToEng.find(ch) != KorToEng.end()) result += ch;
-  }
-  return result;
+Lcd::~Lcd() {
+  lcdClear(lcdState);
+  std::cout << "LCD is destroyed" << std::endl;
 }
 
-/* TODO
-  1. LCD 출력 및 clear시 제대로 되었는지 확인하는 코드 작성
-*/
+void Lcd::clear() {
+  lcdClear(lcdState);
+  std::cout << "LCD is cleared" << std::endl;
+}
+
+void Lcd::print(const std::string& str) {
+  lcdPosition(lcdState, 0, 0);
+  lcdPuts(lcdState, str.c_str());
+  std::cout << "LCD output: " << str << std::endl;
+}
