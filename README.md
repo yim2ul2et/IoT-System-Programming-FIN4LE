@@ -28,8 +28,9 @@
 - yolov5s 모델을 사용하여 번호판 인식 학습
 - [roboflow 차량번호판 데이터 셋](https://universe.roboflow.com/school-b6rj0/-dpo7a/browse?queryText=&pageSize=50&startingIndex=0&browseQuery=true) 사용
 
-#### 테스트 영상
-- [유튜브 영상](https://youtu.be/IVkf7KbGlIg)
+#### 소개 자료
+- [발표 자료](https://github.com/yim2ul2et/IoT-System-Programming-FIN4LE/blob/main/Project%20PPT.pdf)
+- [유튜브 시연 영상](https://youtu.be/IVkf7KbGlIg)
 
 #### 사용 방법
 - 외부 라이브러리를 설치한 후 ./build에서 cmake로 빌드
